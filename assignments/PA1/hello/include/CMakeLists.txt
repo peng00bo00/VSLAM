@@ -1,0 +1,1 @@
+INSTALL(FILES "../include/hello.h" DESTINATION /usr/local/include/)

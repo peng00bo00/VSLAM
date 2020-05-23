@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.10)
+
+PROJECT(HELLO)
+
+ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(include)
+
+SET(CMAKE_BUILD_TYPE "Release")
