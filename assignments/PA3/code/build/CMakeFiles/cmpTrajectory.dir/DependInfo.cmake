@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/pengbo/VSLAM/assignments/PA3/code/draw_trajectory.cpp" "/home/pengbo/VSLAM/assignments/PA3/code/build/CMakeFiles/drawTrajectory.dir/draw_trajectory.cpp.o"
+  "/home/pengbo/VSLAM/assignments/PA3/code/cmp_trajectory.cpp" "/home/pengbo/VSLAM/assignments/PA3/code/build/CMakeFiles/cmpTrajectory.dir/cmp_trajectory.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

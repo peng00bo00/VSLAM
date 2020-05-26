@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/cmpTrajectory.dir/cmp_trajectory.cpp.o  -o cmpTrajectory  -Wl,-rpath,/home/pengbo/Pangolin/build/src /home/pengbo/Pangolin/build/src/libpangolin.so -lrt -lpthread -lOpenGL -lGLX -lGLU -lGLEW -lEGL -lX11 -lrt -lpthread -lOpenGL -lGLX -lGLU -lGLEW -lEGL -lX11 -ldc1394 -lavcodec -lavformat -lavutil -lswscale -lavdevice 

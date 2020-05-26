@@ -10,4 +10,7 @@ include_directories(${Pangolin_INCLUDE_DIRS})
 # Eigen
 include_directories("/usr/include/eigen3")
 add_executable(drawTrajectory draw_trajectory.cpp)
+add_executable(cmpTrajectory cmp_trajectory.cpp)
+
 target_link_libraries(drawTrajectory Sophus::Sophus ${Pangolin_LIBRARIES})
+target_link_libraries(cmpTrajectory Sophus::Sophus ${Pangolin_LIBRARIES})

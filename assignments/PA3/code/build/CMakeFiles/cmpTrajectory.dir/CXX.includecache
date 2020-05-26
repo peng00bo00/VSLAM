@@ -690,7 +690,7 @@ pangolin/video/stream_info.h
 pangolin/utils/picojson.h
 -
 
-/home/pengbo/VSLAM/assignments/PA3/code/draw_trajectory.cpp
+/home/pengbo/VSLAM/assignments/PA3/code/cmp_trajectory.cpp
 sophus/se3.hpp
 -
 string
