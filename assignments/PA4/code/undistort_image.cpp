@@ -4,6 +4,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <string>
+#include <cmath>
 
 using namespace std;
 
@@ -28,7 +29,15 @@ int main(int argc, char **argv) {
             double u_distorted = 0, v_distorted = 0;
             // TODO 按照公式，计算点(u,v)对应到畸变图像中的坐标(u_distorted, v_distorted) (~6 lines)
             // start your code here
-            
+            double x = (u - cx) / fx;
+            double y = (v - cy) / fy;
+            double r = sqrt(x*x + y*y);
+
+            double x_distorted = x * (1 + k1 * pow(r, 2) + k2 * pow(r, 4)) + 2 * p1 * x * y + p2 * (r * r + 2 * x * x);
+            double y_distorted = y * (1 + k1 * pow(r, 2) + k2 * pow(r, 4)) + p1 * (r * r + 2 * y * y) + 2 * p2 * x * y;
+
+            u_distorted = fx * x_distorted + cx;
+            v_distorted = fy * y_distorted + cy;
             // end your code here
 
             // 赋值 (最近邻插值)
@@ -42,6 +51,7 @@ int main(int argc, char **argv) {
     // 画图去畸变后图像
     cv::imshow("image undistorted", image_undistort);
     cv::waitKey();
+    cv::imwrite("./image_undistort.jpg", image_undistort);
 
     return 0;
 }

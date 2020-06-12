@@ -43,6 +43,15 @@ int main(int argc, char **argv) {
 
             // start your code here (~6 lines)
             // 根据双目模型计算 point 的位置
+            double x = (u - cx) / fx;
+            double y = (v - cy) / fy;
+            double depth = fx * d / disparity.at<uchar>(v, u);
+
+            point[0] = x * depth;
+            point[1] = y * depth;
+            point[2] = depth;
+
+            pointcloud.push_back(point);
             // end your code here
         }
 
