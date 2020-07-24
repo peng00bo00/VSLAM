@@ -95,9 +95,16 @@ public:
         for (int i = -2; i < 2; i++)
         {
             for (int j = -2; j < 2; j++)
-            {
+            {               
                 int idx = 4 * (i+2) + (j+2);
-                _error[idx] = origColor[idx] - GetPixelValue(targetImg, x+i, y+j);
+                _error[idx] = 0;
+                
+                if (x+i > 0 && y+j > 0 && x+i < targetImg.cols && y+j < targetImg.rows)
+                {
+                    _error[idx] = origColor[idx] - GetPixelValue(targetImg, x+i, y+j);
+                }
+                
+                // _error[idx] = origColor[idx] - GetPixelValue(targetImg, x+i, y+j);
             }
             
         }
@@ -218,87 +225,36 @@ int main(int argc, char **argv) {
         cv::Mat image = images[i];
         for (size_t j = 0; j < vertex_points.size(); j++)
         {
-            Eigen::Vector3d P = (vertex_poses[i] -> estimate()) * (vertex_points[j] -> estimate());
-            float x = fx*P[0]/P[2] + cx;
-            float y = fy*P[1]/P[2] + cy;
+            // Eigen::Vector3d P = (vertex_poses[i] -> estimate()) * (vertex_points[j] -> estimate());
+            // float x = fx*P[0]/P[2] + cx;
+            // float y = fy*P[1]/P[2] + cy;
 
-            if (x-2 > 0 && y-2 > 0 && x+2 < image.cols && y+2 < image.rows)
-            {
-                EdgeDirectProjection* edge = new EdgeDirectProjection(color[i], image);
+            // skip boundary points
+            // if (x-2 > 0 && y-2 > 0 && x+2 < image.cols && y+2 < image.rows)
+            // {
+                EdgeDirectProjection* edge = new EdgeDirectProjection(color[j], image);
 
                 edge->setVertex(1, vertex_poses[i]);
                 edge->setVertex(0, vertex_points[j]);
                 edge->setInformation(Eigen::Matrix<double,16,16>::Identity());
 
                 g2o::RobustKernelHuber* huber = new g2o::RobustKernelHuber;
-                huber -> setDelta(0.5);
+                // huber -> setDelta(0.5);
                 edge  -> setRobustKernel(huber);
 
                 optimizer.addEdge(edge);
-            }
+            // }
             
         }
         
     }
-    
-    
-
-    // // add pose vertex
-    // for(int i = 0; i < poses.size(); ++i) {
-    //     VertexSophus* v = new VertexSophus();
-    //     v->setId(i);
-    //     v->setEstimate(poses[i]);
-    //     optimizer.addVertex(v);
-    // }
-    // // add point Vertex
-    // for(int i = 0; i < points.size(); ++i) {
-    //     double x = points[i][0];
-    //     double y = points[i][1];
-    //     double z = points[i][2];
-
-    //     g2o::VertexSBAPointXYZ* v = new g2o::VertexSBAPointXYZ();
-    //     v->setId(poses.size() + i);
-    //     v->setMarginalized(true);
-    //     v->setEstimate(Eigen::Vector3d(x,y,z));
-    //     optimizer.addVertex(v);
-    // }
-    // // add edges
-    // vector<EdgeDirectProjection*>edges;
-    // for(int i = 0; i < poses.size(); ++i) {
-    //     for(int j = 0; j < points.size(); ++j) {
-
-    //         g2o::VertexSBAPointXYZ* vp = static_cast< g2o::VertexSBAPointXYZ*>(optimizer.vertex(poses.size() + j));
-    //         VertexSophus* vse = static_cast<VertexSophus*>(optimizer.vertex(i));
-
-    //         Sophus::SE3d se3 = vse->estimate();
-    //         Eigen::Vector3d p = vp->estimate();
-    //         Eigen::Vector3d pt = se3 * p;
-    //         float u = pt(0) / pt(2) * fx + cx;
-    //         float v = pt(1) / pt(2) * fy + cy;
-
-    //         if(u-2 < 0 || u+1 >= 640 || v-2 < 0 || v+1 >= 480) {
-    //             continue;
-    //         }
-
-    //         EdgeDirectProjection* edge = new EdgeDirectProjection(color[i], images[i]);
-    //         edge->setVertex(0, vp);
-    //         edge->setVertex(1, vse);
-    //         edge->setInformation(Eigen::Matrix<double,16,16>::Identity());
-    //         g2o::RobustKernelHuber* rk = new g2o::RobustKernelHuber;
-    //         rk->setDelta(0.5);
-    //         edge->setRobustKernel(rk);
-    //         optimizer.addEdge(edge);
-    //         edges.push_back(edge);
-    //     }
-    // }
-    // cout << "num of edges: " << edges.size() << endl;
 
     // END YOUR CODE HERE
 
     // perform optimization
     optimizer.setVerbose(true);
     optimizer.initializeOptimization();
-    optimizer.optimize(200);
+    optimizer.optimize(500);
 
     // TODO fetch data from the optimizer
     // START YOUR CODE HERE

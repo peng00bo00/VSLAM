@@ -64,6 +64,8 @@ public:
     /// 根据估计值投影一个点
     Vector2d project(const Vector3d &point) {
         Vector3d pc = _estimate.rotation * point + _estimate.translation;
+        // cout << pc.transpose() << endl;
+        
         pc = -pc / pc[2];
         double r2 = pc.squaredNorm() - 1;
         double distortion = 1.0 + r2 * (_estimate.k1 + _estimate.k2 * r2);
@@ -105,6 +107,7 @@ public:
         auto v1 = (VertexPoint *) _vertices[1];
         auto proj = v0->project(v1->estimate());
         _error = proj - _measurement;
+        // cout << _error.transpose() << endl;
     }
 
     // use numeric derivatives, changed to real derivatives
@@ -174,6 +177,7 @@ public:
         // dR
         _jacobianOplusXi.block<2, 3>(0, 0) = -dpc_ * SO3d::hat(rotation * v1->estimate());
 
+        // cout << _jacobianOplusXj << endl << endl;
     };
 
     virtual bool read(istream &in) {}
@@ -250,10 +254,11 @@ void SolveBA(BALProblem &bal_problem) {
         edge->setInformation(Matrix2d::Identity());
         edge->setRobustKernel(new g2o::RobustKernelHuber());
         optimizer.addEdge(edge);
+
     }
 
     optimizer.initializeOptimization();
-    optimizer.optimize(40);
+    optimizer.optimize(30);
 
     // set to bal problem
     for (int i = 0; i < bal_problem.num_cameras(); ++i) {
